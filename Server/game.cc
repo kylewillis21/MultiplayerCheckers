@@ -19,13 +19,14 @@ bool game::makeMove(std::string target, std::string destination){
     y2 = destination[0] - '0';
     x2 = destination[1] - '0';
     if(!rightColor(y1,x1)){
-        cout << "Error: Trying to move the others players piece";
         return false;
     }
-
-    gameBoard.movePiece(y1,x1,y2,x2);
-    // If this hits the move was correctly made
-    return true;
+    cout << "passing " << y1 << x1 << y2 << x2 << "line 29 game.cc" << endl;
+    if(gameBoard.movePiece(y1,x1,y2,x2)){
+        // If this hits the move was correctly made
+        return true;
+    }
+    return false;
 }
 
 void game::startGame(){
@@ -96,10 +97,15 @@ bool game::rightColor(int y1, int x1){
     else{
         color = "red";
     }
-
-    if(gameBoard.getSpaceFromBoard(y1,x1).getCurrentPiece()->getColor() == color){
-        return true;
+    if(gameBoard.getSpaceFromBoard(y1,x1).getIsEmpty() == false){
+        if(gameBoard.getSpaceFromBoard(y1,x1).getCurrentPiece()->getColor() == color){
+            return true;
+        }
+        else{
+            cout << "Error: trying to play the other players piece" << endl;
+        }
     }
+    cout << "Error: this is an unplayable/empty space" << endl;
     return false;
 }
 
