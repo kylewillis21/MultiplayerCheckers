@@ -5,8 +5,8 @@ CXXFLAGS=-Wall -c
 build: main
 
 # Main creates an executable called main
-main: piece.o test.o space.o board.o
-	$(CC) -o main space.o piece.o test.o board.o
+main: piece.o test.o space.o board.o game.o
+	$(CC) -o main space.o piece.o test.o board.o game.o
 
 # Creates an object file for piece
 piece.o: piece.cc piece.h
@@ -24,6 +24,10 @@ space.o: space.cc space.h
 board.o: board.cc board.h
 	$(CC) $(CXXFLAGS) board.cc
 
+# Creates an object file for game
+game.o: game.h game.cc
+	$(CC) $(CXXFLAGS) game.cc
+	
 # Clean removes all .o files and main
 clean:
 	rm *.o main

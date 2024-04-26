@@ -2,20 +2,22 @@
 #include "board.h"
 #include "space.h"
 #include "colors.h"
+#include "game.h"
 #include <iostream>
 
 using namespace std;
 
 int main(){
+    // Need to create all the pieces that will be used by the pointers
     piece red("red");
     piece black("black");
-    board newGame(&red, &black);
+    piece blackKing("black");
+    blackKing.makeKing();
+    piece redKing("red");
+    redKing.makeKing();
+
+    game newGame(&red, &black, &blackKing, &redKing);
+    newGame.startGame();
+    return 0;
     
-    cout << newGame;
-    newGame.movePiece("24", "35");
-    newGame.movePiece("57", "46");
-    newGame.movePiece("35","57");
-    newGame.movePiece("26","37");
-    newGame.movePiece("37","55");
-    cout << newGame;
 }

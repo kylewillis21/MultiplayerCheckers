@@ -7,6 +7,11 @@
 
 using namespace std;
 
+board::board(){
+    redKing = nullptr;
+    blackKing = nullptr;
+}
+
 board::board(piece* red, piece* black, piece* kingBlack, piece* kingRed){ // this constructs a new board for a new game
     redKing = kingRed;
     blackKing = kingBlack;
@@ -84,14 +89,7 @@ board::board(piece* red, piece* black, piece* kingBlack, piece* kingRed){ // thi
 }
 
 // This will move a piece on the board by going through a series of checks to make sure it is possible
-void board::movePiece(std::string target, std::string destination){
-    // Need to convert the strings into integers
-    int y1 , y2, x1, x2;
-    y1 = target[0] - '0';
-    x1 = target[1] - '0';
-    y2 = destination[0] - '0';
-    x2 = destination[1] - '0';
-
+void board::movePiece(int y1, int x1, int y2, int x2){
     // Check to make sure there is a piece where the target is
     if(mainBoard[y1][x1].getIsEmpty() == true){
         cout << "Error: there is no piece to move" << endl;

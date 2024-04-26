@@ -6,9 +6,15 @@
 
 class board{
     public:
+        // Constructors
+        board();
         board(piece* red, piece* black, piece* kingBlack, piece* kingRed); // Will create a new board ready to be played on
 
-        void movePiece(std::string target, std::string destination);
+        // Getters
+        space getSpaceFromBoard(int y, int x) {return mainBoard[y][x];}
+
+        // Modifiers
+        void movePiece(int y1, int x1, int y2, int x2);
         
         void output(std::ostream& outs)const;
 
