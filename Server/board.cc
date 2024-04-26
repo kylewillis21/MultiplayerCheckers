@@ -89,26 +89,30 @@ board::board(piece* red, piece* black, piece* kingBlack, piece* kingRed){ // thi
 }
 
 // This will move a piece on the board by going through a series of checks to make sure it is possible
-void board::movePiece(int y1, int x1, int y2, int x2){
+bool board::movePiece(int y1, int x1, int y2, int x2){
     // Check to make sure there is a piece where the target is
     if(mainBoard[y1][x1].getIsEmpty() == true){
         cout << "Error: there is no piece to move" << endl;
-        return;
+        return false;
+    }
+    else if(!mainBoard[y1][x1].getPlayableSpot() || !mainBoard[y2][x2].getPlayableSpot()){
+        cout << "Error: Unplayable spot involved in this move" << endl;
+        return false;
     }
     // Check to make sure the destination is also empty
     else if(mainBoard[y2][x2].getIsEmpty() == false){
         cout << "Error: there is already a piece there" << endl;
-        return;
+        return false;
     }
     // Check to make sure the destination is a playable spot
     else if(mainBoard[y2][x2].getPlayableSpot() == false){
         cout << "Error: this is an illegal move" << endl;
-        return;
+        return false;
     }
 
     if(!isLegalMove(y1,x1,y2,x2)){
         cout << "Error: This is not a legal move" << endl;
-        return;
+        return false;
     }
     
     // Move the piece to where it needs to go
@@ -130,6 +134,7 @@ void board::movePiece(int y1, int x1, int y2, int x2){
             mainBoard[y2][x2].makeKing(redKing);
         }
     }
+    return true;
 }
 
 // Helper functions
