@@ -1,4 +1,5 @@
 #include "game.h"
+#include "colors.h"
 #include <iostream>
 #include <string>
 
@@ -21,7 +22,7 @@ bool game::makeMove(std::string target, std::string destination){
     if(!rightColor(y1,x1)){
         return false;
     }
-    cout << "passing " << y1 << x1 << y2 << x2 << "line 29 game.cc" << endl;
+
     if(gameBoard.movePiece(y1,x1,y2,x2)){
         // If this hits the move was correctly made
         return true;
@@ -34,7 +35,7 @@ void game::startGame(){
     string destination;
     while(!checkWin()){ //  Program will be in this loop until there is a winner
         cout << gameBoard;
-        cout << "\nIt is " << getTurn() << "s turn" << endl;
+        cout << "\nIt is " << getTurn() << " turn" << endl;
         do {
             cout << "What piece would you like to move: ";
             cin >> target;
@@ -111,9 +112,9 @@ bool game::rightColor(int y1, int x1){
 
 std::string game::getTurn(){
     if(turnNum%2==0){
-        return "black";
+        return FCYN("blues");
     }
-    return "red";
+    return FRED("reds");
 }
 
 

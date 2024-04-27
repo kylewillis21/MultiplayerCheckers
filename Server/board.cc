@@ -247,10 +247,10 @@ bool board::isLegalJump(int y1, int x1, int y2, int x2, std::string color){
 }
 
 bool board::isKingMe(int y2, std::string color) {
-    if(y2 == 7 && color == "black"){
+    if(y2 == 0 && color == "black"){
         return true;
     }
-    else if(y2 == 0 && color == "red"){
+    else if(y2 == 7 && color == "red"){
         return true;
     } 
     else {
@@ -264,9 +264,9 @@ bool board::isKingMe(int y2, std::string color) {
 void board::output(std::ostream& outs)const{
     outs << "   0 1 2 3 4 5 6 7\n";
     outs << "  _________________\n";
-    for(int i = 0; i < 8; i++){
+    for(int i = 7; i >= 0; i--){
         outs << i << " ";
-        for(int j = 0; j < 8; j++){
+        for(int j = 7; j >= 0; j--){
             outs << "|" << mainBoard[i][j];
         }
         outs << "|\n" << "  _________________\n";
