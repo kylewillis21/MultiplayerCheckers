@@ -90,6 +90,9 @@ board::board(piece* red, piece* black, piece* kingBlack, piece* kingRed){ // thi
 
 // This will move a piece on the board by going through a series of checks to make sure it is possible
 bool board::movePiece(int y1, int x1, int y2, int x2){
+    // A variable to see if a piece has jumped another piece in this turn
+    bool hasJumped = false;
+
     // Check to make sure there is a piece where the target is
     if(mainBoard[y1][x1].getIsEmpty() == true){
         cout << "Error: there is no piece to move" << endl;
@@ -133,6 +136,23 @@ bool board::movePiece(int y1, int x1, int y2, int x2){
         if(isKingMe(y2, "red")){
             mainBoard[y2][x2].makeKing(redKing);
         }
+    }
+
+    // At this point the move has been made and we can check to see if the
+    // original move jumped any pieces
+    if(abs(y1-y2) == 2 && abs(x1-x2) == 2){
+        hasJumped = true;
+    }
+    
+    if(canDoubleJump(y2,x2) && hasJumped){
+        string destination;
+        output(cout);
+        cout << "A double jump is possible!" << endl;
+        cout << "Where would you like the piece on " << y2 << x2 << " to jump?: ";
+        cin >> destination;
+        int y3 = destination[0] - '0';
+        int x3 = destination[1] - '0';
+        movePiece(y2, x2, y3, x3);
     }
     return true;
 }
@@ -258,11 +278,105 @@ bool board::isKingMe(int y2, std::string color) {
     }
 }
 
+bool board::canDoubleJump(int y, int x) {
+    string color = mainBoard[y][x].getCurrentPiece()->getColor();
 
+    if(color == "red") {
+        return canDoubleJumpRed(y,x);
+    }
+    else if(color == "black"){
+        return canDoubleJumpBlack(y,x);
+    }
+    return false;
+}
+
+bool board::canDoubleJumpBlack(int y, int x){
+    piece currentPiece = *mainBoard[y][x].getCurrentPiece();
+    
+    if(y+2 < 8 && x+2 < 8 && currentPiece.getIsKing()){ // ++
+        if(mainBoard[y+2][x+2].getIsEmpty()){
+            if(!mainBoard[y+1][x+1].getIsEmpty()){
+                if(mainBoard[y+1][x+1].getCurrentPiece()->getColor() != currentPiece.getColor()){
+                    return true; // All checks passed
+                }
+            }
+        }
+    }
+    if(y-2 >= 0 && x-2 >= 0){ // --
+        if(mainBoard[y-2][x-2].getIsEmpty()){
+            if(!mainBoard[y-1][x-1].getIsEmpty()){
+                if(mainBoard[y-1][x-1].getCurrentPiece()->getColor() != currentPiece.getColor()){
+                    return true; // All checks passed
+                }
+            }
+        }
+    }
+    if(y-2 >= 0 && x+2 < 8){ // -+ 
+        if(mainBoard[y-2][x+2].getIsEmpty()){
+            if(!mainBoard[y-1][x+1].getIsEmpty()){
+                if(mainBoard[y-1][x+1].getCurrentPiece()->getColor() != currentPiece.getColor()){
+                    return true; // All checks passed
+                }
+            }
+        }
+    }
+    if(y+2 < 8 && x-2 >= 0 && currentPiece.getIsKing()){ // +-
+        if(mainBoard[y+2][x-2].getIsEmpty()){
+            if(!mainBoard[y+1][x-1].getIsEmpty()){
+                if(mainBoard[y+1][x-1].getCurrentPiece()->getColor() != currentPiece.getColor()){
+                    return true; // All checks passed
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool board::canDoubleJumpRed(int y, int x){
+    piece currentPiece = *mainBoard[y][x].getCurrentPiece();
+    
+    if(y+2 < 8 && x+2 < 8){ // ++
+        if(mainBoard[y+2][x+2].getIsEmpty()){
+            if(!mainBoard[y+1][x+1].getIsEmpty()){
+                if(mainBoard[y+1][x+1].getCurrentPiece()->getColor() != currentPiece.getColor()){
+                    return true; // All checks passed
+                }
+            }
+        }
+    }
+    if(y-2 >= 0 && x-2 >= 0 && currentPiece.getIsKing()){ // --
+        if(mainBoard[y-2][x-2].getIsEmpty()){
+            if(!mainBoard[y-1][x-1].getIsEmpty()){
+                if(mainBoard[y-1][x-1].getCurrentPiece()->getColor() != currentPiece.getColor()){
+                    return true; // All checks passed
+                }
+            }
+        }
+    }
+    if(y-2 >= 0 && x+2 < 8 && currentPiece.getIsKing()){ // -+ Ensures that if it's jumping backwards that the piece is also a king
+        if(mainBoard[y-2][x+2].getIsEmpty()){
+            if(!mainBoard[y-1][x+1].getIsEmpty()){
+                if(mainBoard[y-1][x+1].getCurrentPiece()->getColor() != currentPiece.getColor()){
+                    return true; // All checks passed
+                }
+            }
+        }
+    }
+    if(y+2 < 8 && x-2 >= 0){ // +-
+        if(mainBoard[y+2][x-2].getIsEmpty()){
+            if(!mainBoard[y+1][x-1].getIsEmpty()){
+                if(mainBoard[y+1][x-1].getCurrentPiece()->getColor() != currentPiece.getColor()){
+                    return true; // All checks passed
+                }
+            }
+        }
+    }
+    return false;
+}
 
 // a function that will print out the current state of the board
 void board::output(std::ostream& outs)const{
-    outs << "   0 1 2 3 4 5 6 7\n";
+    outs << "\n   0 1 2 3 4 5 6 7\n";
     outs << "  _________________\n";
     for(int i = 7; i >= 0; i--){
         outs << i << " ";
