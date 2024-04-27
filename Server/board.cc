@@ -266,7 +266,7 @@ void board::output(std::ostream& outs)const{
     outs << "  _________________\n";
     for(int i = 7; i >= 0; i--){
         outs << i << " ";
-        for(int j = 7; j >= 0; j--){
+        for(int j = 0; j  < 8; j++){
             outs << "|" << mainBoard[i][j];
         }
         outs << "|\n" << "  _________________\n";

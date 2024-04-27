@@ -43,6 +43,7 @@ void game::startGame(){
             cin >> destination;
         } while(!makeMove(target,destination));
         turnNum++;
+        updatePieceCount();
     }
     return;
 }
@@ -76,11 +77,13 @@ void game::updatePieceCount(){
 
     for(int i = 0; i < 7; i++){
         for(int j = 0; j < 7; j++){
-            if(gameBoard.getSpaceFromBoard(i, j).getCurrentPiece()->getColor() == "red"){
-                redCount++;
-            }
-            else if(gameBoard.getSpaceFromBoard(i, j).getCurrentPiece()->getColor() == "black"){
-                blackCount++;
+            if(!gameBoard.getSpaceFromBoard(i, j).getIsEmpty()){
+                if(gameBoard.getSpaceFromBoard(i, j).getCurrentPiece()->getColor() == "red"){
+                    redCount++;
+                }
+                else if(gameBoard.getSpaceFromBoard(i, j).getCurrentPiece()->getColor() == "black"){
+                    blackCount++;
+                }
             }
         }
     }
