@@ -18,11 +18,12 @@ class game{
         void setTurnNum(int num) {turnNum = num;}
         void setBlackPieces(int num) {blackPieces = num;}
         void setRedPieces(int num) {redPieces = num;}
+        void incrementTurnNum() {turnNum++;}
 
         // Helper functions
         bool legalMove();
         bool makeMove(std::string target, std::string destination);
-        void startGame();
+        void playGame(std::string target, std::string destination); // No longer in use
         bool checkWin(); // done
         bool checkRedWin(); // done
         bool checkBlackWin(); // done

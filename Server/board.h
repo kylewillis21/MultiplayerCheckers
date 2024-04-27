@@ -30,6 +30,9 @@ class board{
         bool isRedLegalMove(int y1, int x1, int y2, int x2);
         bool isLegalJump(int y1, int x1, int y2, int x2, std::string color);
         bool isKingMe(int y2, std::string color);
+        bool canDoubleJump(int y, int x); // A function that will test if a double jump is available
+        bool canDoubleJumpBlack(int y, int x);
+        bool canDoubleJumpRed(int y, int x);
         
 };
 

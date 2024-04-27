@@ -30,9 +30,7 @@ bool game::makeMove(std::string target, std::string destination){
     return false;
 }
 
-void game::startGame(){
-    string target;
-    string destination;
+void game::playGame(std::string target, std::string destination){
     while(!checkWin()){ //  Program will be in this loop until there is a winner
         cout << gameBoard;
         cout << "\nIt is " << getTurn() << " turn" << endl;
@@ -124,12 +122,6 @@ std::string game::getTurn(){
 // Output functions
 
 void game::output(std::ostream& outs)const{
-    if(turnNum%2 == 0){
-        outs << "Blacks turn!\n";
-    }
-    else{
-        outs << "Reds turn!\n";
-    }
     outs << gameBoard;
 }
 

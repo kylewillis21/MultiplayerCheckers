@@ -17,7 +17,21 @@ int main(){
     redKing.makeKing();
 
     game newGame(&red, &black, &blackKing, &redKing);
-    newGame.startGame();
+    string target = "";
+    string destination = "";
+    
+    while(!newGame.checkWin()){
+        cout << newGame;
+        cout << "It is " << newGame.getTurn() << " turn" << endl;
+        do {
+            cout << "What piece would you like to move: ";
+            cin >> target;
+            cout << "Where would you like to move " << target << ": ";
+            cin >> destination;
+            if(target == "end" || destination == "end") {return 0;} // This is strictly for testing
+        } while(!newGame.makeMove(target, destination));
+        newGame.incrementTurnNum();
+    }
     return 0;
     
 }
