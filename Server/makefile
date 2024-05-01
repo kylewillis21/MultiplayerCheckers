@@ -1,12 +1,19 @@
 CC=g++
 CXXFLAGS=-Wall -c
+# Path to asio
+ASIO=-I./lib/include
+PTHREAD=-pthread
 
 # Build depends on main target
 build: main
 
-# Main creates an executable called main
-main: piece.o test.o space.o board.o game.o
-	$(CC) -o main space.o piece.o test.o board.o game.o
+# Test creates an executable called test that was used for testing purposes
+test: piece.o test.o space.o board.o game.o
+	$(CC) -o test space.o piece.o test.o board.o game.o
+
+# Creates an executable called main
+main: game.o board.o piece.o space.o
+	$(CC) $(ASIO) $(PTHREAD) -o main main.cc game.o board.o space.o piece.o
 
 # Creates an object file for piece
 piece.o: piece.cc piece.h
@@ -30,4 +37,4 @@ game.o: game.h game.cc
 	
 # Clean removes all .o files and main
 clean:
-	rm *.o main
+	rm *.o main test
