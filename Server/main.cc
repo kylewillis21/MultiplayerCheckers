@@ -1,6 +1,6 @@
-#include "lib/include/asio.hpp"
-#include "lib/include/asio/ts/buffer.hpp"
-#include "lib/include/asio/ts/internet.hpp"
+#include "../lib/include/asio.hpp"
+#include "../lib/include/asio/ts/buffer.hpp"
+#include "../lib/include/asio/ts/internet.hpp"
 #include <iostream>
 #include "game.h"
 #include "piece.h"
@@ -37,8 +37,6 @@ std::string getClientMessage(tcp::socket &socket){
             asio::read_until(socket, receiveBuffer, '\n');
             std::string message(asio::buffer_cast<const char*>(receiveBuffer.data()), receiveBuffer.size());
             
-            // Send acknowledgment back to client
-            asio::write(socket, asio::buffer("ACK\n"));
             return message;
         }
     } catch(std::exception &e) {

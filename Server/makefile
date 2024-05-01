@@ -1,7 +1,7 @@
 CC=g++
 CXXFLAGS=-Wall -c
 # Path to asio
-ASIO=-I./lib/include
+ASIO=-I../lib/include
 PTHREAD=-pthread
 
 # Build depends on main target
