@@ -9,12 +9,13 @@ void sendServerMessage(tcp::socket &socket, std::string message);
 
 int main() {
     try {
+        // Connecting to server
         asio::io_context io_context;
         tcp::socket socket(io_context);
         tcp::resolver resolver(io_context);
 
         asio::connect(socket, resolver.resolve("localhost", "12345"));
-
+        //////////////////////////////////////////////////////////////
         std::string message;
         std::cout << "Write your message: ";
         std::getline(std::cin, message);
