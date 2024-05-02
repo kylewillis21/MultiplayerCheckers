@@ -30,6 +30,8 @@ class game{
         void updatePieceCount(); // done
         bool rightColor(int y1, int x1); // done
         std::string getTurn(); // done
+        std::string toString() {return gameBoard.boardToString();}
+        void stringToBoard(std::string s) {gameBoard.stringToBoard(s);}
 
         // Output
         void output(std::ostream& outs)const;

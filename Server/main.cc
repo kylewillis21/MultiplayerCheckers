@@ -1,13 +1,13 @@
 #include "../lib/include/asio.hpp"
-#include "../lib/include/asio/ts/buffer.hpp"
-#include "../lib/include/asio/ts/internet.hpp"
 #include <iostream>
 #include "game.h"
 #include "piece.h"
 
 using asio::ip::tcp;
 
-void waitForClient(asio::io_context &io_context, tcp::acceptor &accpetor);
+// Function prototypes
+std::string getClientMessage(tcp::socket &socket);
+void sendClientMessage(tcp::socket &socket, std::string message);
 
 int main(int argc, char* argv[]) {
     try{
@@ -20,9 +20,49 @@ int main(int argc, char* argv[]) {
 
         tcp::socket socket(io_context);
         acceptor.accept(socket);
+        ///////////////////////////////////////////////////////////////////////////
+        piece red("red");
+        piece black("black");
+        piece blackKing("black");
+        blackKing.makeKing();
+        piece redKing("red");
+        redKing.makeKing();
+
+        game newGame(&red, &black, &blackKing, &redKing);
+        std::string target = "";
+        std::string destination = "";
+
+        while(!newGame.checkWin()){
+            if(newGame.getTurnNum()%2==0){  // This decides whether it is the server or clients turn
+                // Servers turn
+                std::cout << newGame;
+                std::cout << "It is " << newGame.getTurn() << " turn" << std::endl;
+                do {
+                    std::cout << "What piece would you like to move: ";
+                    std::cin >> target;
+                    std::cout << "Where would you like to move " << target << ": ";
+                    std::cin >> destination;
+                } while(!newGame.makeMove(target, destination));
+                newGame.incrementTurnNum();
+            }
+            else{
+                std::cout << newGame;
+                std::cout << "It is " << newGame.getTurn() << " turn" << std::endl;
+                std::cout << "Waiting on their move..." << std::endl;
+                do {
+                    sendClientMessage(socket, newGame.toString());
+                    target = getClientMessage(socket);
+                    destination = getClientMessage(socket);
+                    std::cout << "They move " << target << " to " << destination << std::endl;
+                } while(!newGame.makeMove(target, destination));
+                newGame.incrementTurnNum();
+            }
+            
+        }
         
         // Game done
         socket.close();
+        std::cout << "Connection closed" << std::endl;
     } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
@@ -31,18 +71,22 @@ int main(int argc, char* argv[]) {
 
 std::string getClientMessage(tcp::socket &socket){
     try {
-        while(true) {
-            // Read message from client
-            asio::streambuf receiveBuffer;
-            asio::read_until(socket, receiveBuffer, '\n');
-            std::string message(asio::buffer_cast<const char*>(receiveBuffer.data()), receiveBuffer.size());
+        // Read message from client
+        asio::streambuf receiveBuffer;
+        asio::read_until(socket, receiveBuffer, '\n');
+        std::string message(asio::buffer_cast<const char*>(receiveBuffer.data()), receiveBuffer.size());
             
-            return message;
-        }
+        return message;
     } catch(std::exception &e) {
         std::cerr << "Exception in getClientMessage: " << e.what() << std::endl;
     }
+    return "Error";
+}
 
-
-    
+void sendClientMessage(tcp::socket &socket, std::string message){
+    try {
+        asio::write(socket, asio::buffer(message + "\n"));
+    } catch(std::exception &e) {
+        std::cerr << "Exception in sendClientMessage: " << e.what() << std::endl;
+    }
 }

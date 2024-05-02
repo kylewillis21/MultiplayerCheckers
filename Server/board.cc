@@ -15,6 +15,8 @@ board::board(){
 board::board(piece* red, piece* black, piece* kingBlack, piece* kingRed){ // this constructs a new board for a new game
     redKing = kingRed;
     blackKing = kingBlack;
+    redPiece = red;
+    blackPiece = black;
     space redpiece(false, true, red);
     space blackpiece(false, true, black);
     space emptyPlayable(true, true, nullptr);
@@ -372,6 +374,78 @@ bool board::canDoubleJumpRed(int y, int x){
         }
     }
     return false;
+}
+
+std::string board::boardToString(){
+    // Initialize a string to be 64 characters long
+    std::string board(64, ' ');
+    int count = 0;
+    for(int i = 7; i >= 0; i--){
+        for(int j = 0; j < 8; j++){
+            if(!mainBoard[i][j].getPlayableSpot()) {
+                board[count] = 'X';
+            }
+            else if(mainBoard[i][j].getIsEmpty()) {
+                board[count] = 'O';
+            }
+            else if(mainBoard[i][j].getCurrentPiece()->getIsKing()){
+                if(mainBoard[i][j].getCurrentPiece()->getColor() == "black"){
+                    board[count] = 'B';
+                }
+                else{
+                    board[count] = 'R';
+                }
+            }
+            else {
+                if(mainBoard[i][j].getCurrentPiece()->getColor() == "black"){
+                    board[count] = 'b';
+                }
+                else {
+                    board[count] = 'r';
+                }
+            }
+            count++;
+        }
+    }
+
+    return board;
+}
+
+void board::stringToBoard(std::string b){
+    // Check to make sure that the string is 64 characters long
+    if(b.length() != 64){
+        cout << "String not the right length" << endl;
+        return;
+    }
+
+    int count = 0;
+    for(int i = 7; i >= 0; i--){
+        for(int j = 0; j < 8; j++){
+            if(b[count] == 'X'){
+                mainBoard[i][j] = space(true, false, nullptr);
+            }
+            else if(b[count] == 'O'){
+                mainBoard[i][j] = space(true, true, nullptr);
+            }
+            else if(b[count] == 'b'){
+                mainBoard[i][j] = space(false, true, blackPiece);
+            }
+            else if(b[count] == 'r'){
+                mainBoard[i][j] = space(false, true, redPiece);
+            }
+            else if(b[count] == 'B'){
+                mainBoard[i][j] = space(false, true, blackKing);
+            }
+            else if(b[count] == 'R'){
+                mainBoard[i][j] = space(false, true, redKing);
+            }
+            else {
+                cout << "Error: Invalid character in board::stringToBoard()" << endl;
+                return;
+            }
+            count++;
+        }
+    }
 }
 
 // a function that will print out the current state of the board

@@ -18,11 +18,17 @@ class board{
         
         void output(std::ostream& outs)const;
 
+        // Helper functions
+        std::string boardToString();
+        void stringToBoard(std::string b);
+
         
     private:
         space mainBoard[8][8];
         piece* redKing;
         piece* blackKing;
+        piece* redPiece;
+        piece* blackPiece;
 
         // Helper functions inside of other functions
         bool isLegalMove(int y1, int x1, int y2, int x2);
