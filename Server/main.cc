@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
         game newGame(&red, &black, &blackKing, &redKing);
         std::string target = "";
         std::string destination = "";
+        std::string boardString = "";
 
         while(!newGame.checkWin()){
             if(newGame.getTurnNum()%2==0){  // This decides whether it is the server or clients turn
@@ -44,20 +45,20 @@ int main(int argc, char* argv[]) {
                     std::cin >> destination;
                 } while(!newGame.makeMove(target, destination));
                 newGame.incrementTurnNum();
+                sendClientMessage(socket, newGame.gameToString());
             }
             else{
+                // Clients turn
+                boardString = "";
                 std::cout << newGame;
                 std::cout << "It is " << newGame.getTurn() << " turn" << std::endl;
                 std::cout << "Waiting on their move..." << std::endl;
-                do {
-                    sendClientMessage(socket, newGame.toString());
-                    target = getClientMessage(socket);
-                    destination = getClientMessage(socket);
-                    std::cout << "They move " << target << " to " << destination << std::endl;
-                } while(!newGame.makeMove(target, destination));
-                newGame.incrementTurnNum();
-            }
-            
+                do{
+                    boardString = getClientMessage(socket);
+                } while(boardString == ""); // Keeps them waiting in the loop until they're sent the board string
+                newGame.stringToGame(boardString);
+                std::cout << newGame;
+            } 
         }
         
         // Game done
@@ -74,19 +75,21 @@ std::string getClientMessage(tcp::socket &socket){
         // Read message from client
         asio::streambuf receiveBuffer;
         asio::read_until(socket, receiveBuffer, '\n');
-        std::string message(asio::buffer_cast<const char*>(receiveBuffer.data()), receiveBuffer.size());
-            
+        std::string message(asio::buffer_cast<const char*>(receiveBuffer.data()), receiveBuffer.size());   
         return message;
     } catch(std::exception &e) {
         std::cerr << "Exception in getClientMessage: " << e.what() << std::endl;
+        throw;
     }
     return "Error";
 }
 
 void sendClientMessage(tcp::socket &socket, std::string message){
     try {
+        // Write message to client
         asio::write(socket, asio::buffer(message + "\n"));
     } catch(std::exception &e) {
         std::cerr << "Exception in sendClientMessage: " << e.what() << std::endl;
+        throw;
     }
 }

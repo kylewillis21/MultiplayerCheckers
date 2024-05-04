@@ -20,24 +20,31 @@ int main(){
     string target = "";
     string destination = "";
     
-    cout << newGame;
-    string s = newGame.toString();
-    cout << s << endl;
-    newGame.stringToBoard(s);
-    cout << newGame;
+    // cout << newGame;
+    // string s = newGame.gameToString();
+    // cout << s << endl;
+    // newGame.stringToGame(s);
+    // cout << newGame;
+    // cout << "It is " << newGame.getTurn() << " turn" << endl;
+    // s = newGame.gameToString();
+    // cout << s << endl;
+    
+    
 
 
-    // while(!newGame.checkWin()){
-    //     cout << newGame;
-    //     cout << "It is " << newGame.getTurn() << " turn" << endl;
-    //     do {
-    //         cout << "What piece would you like to move: ";
-    //         cin >> target;
-    //         cout << "Where would you like to move " << target << ": ";
-    //         cin >> destination;
-    //         if(target == "end" || destination == "end") {return 0;} // This is strictly for testing
-    //     } while(!newGame.makeMove(target, destination));
-    //     newGame.incrementTurnNum();
-    // }
+    while(!newGame.checkWin()){
+        // newGame.stringToGame("XbXbXOXbbXOXOXbXXOXOXbXbbXOXOXOXXOXOXOXOOXOXrXrXXrXOXrXrrXBXrXrX17");
+        cout << newGame;
+        cout << "It is " << newGame.getTurn() << " turn" << endl;
+        do {
+            cout << "What piece would you like to move: ";
+            cin >> target;
+            cout << "Where would you like to move " << target << ": ";
+            cin >> destination;
+            if(target == "end" || destination == "end") {return 0;} // This is strictly for testing
+        } while(!newGame.makeMove(target, destination));
+        newGame.incrementTurnNum();
+        cout << newGame.gameToString() << endl;
+    }
     return 0;   
 }
